@@ -1,11 +1,9 @@
-import { useState } from 'react'
+import { useReducer, useEffect, useState } from 'react';
 import './App.css'
 import Navbar from './layout/Navbar'
 import AddTodo from './components/AddTodo';
 import TodoList from './components/TodoList';
 import EditModal from './components/EditModal';
-import { useReducer } from 'react';
-
 
 const initialTodoState = {
   filter: 'semua',
@@ -25,7 +23,14 @@ function reducer(todoState, action) {
 }
 
 function App() {
-  const [todos, setTodos] = useState([])
+  const [todos, setTodos] = useState(() => {
+    const storedTodos = localStorage.getItem("todos");
+    return storedTodos ? JSON.parse(storedTodos) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("todos", JSON.stringify(todos));
+  }, [todos]);
 
   const [todoState, dispatch] = useReducer(reducer, initialTodoState);
 
@@ -87,17 +92,21 @@ function App() {
         <AddTodo addTodo={addTodo} />
 
         {/* Menggunakan reducer untuk mengset state dari todo yang ingin ditampilkan */}
-        <div class="inline-flex rounded-md shadow-xs mt-5" role="group">
-          <button onClick={() => dispatch({ type: 'semua' })} type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
+        <div className="inline-flex rounded-md shadow-xs mt-5" role="group">
+          <button onClick={() => dispatch({ type: 'semua' })} type="button" className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-s-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
             Semua
           </button>
-          <button onClick={() => dispatch({ type: 'selesai' })} type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
+          <button onClick={() => dispatch({ type: 'selesai' })} type="button" className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
             Selesai
           </button>
-          <button onClick={() => dispatch({ type: 'aktif' })} type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
+          <button onClick={() => dispatch({ type: 'aktif' })} type="button" className="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-e-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:text-white dark:hover:bg-gray-700 dark:focus:ring-blue-500 dark:focus:text-white">
             Aktif
           </button>
         </div>
+        
+        <p className="mt-3 text-sm text-gray-600 italic">
+          Showing: {todoState.filter}
+        </p>
 
         <TodoList
           todos={filteredTodos}

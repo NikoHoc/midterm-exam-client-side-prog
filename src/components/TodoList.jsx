@@ -25,6 +25,7 @@ function TodoList({ todos, toggleTodo, deleteTodo, setEditingId, setEditingText 
                 key={todo.id}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200 hover:bg-gray-50 dark:hover:bg-gray-600"
               >
+                {/* Mengecek todo, completed atau not completed untuk efek dicoret jika completed */}
                 <th className={`px-6 py-4 font-medium whitespace-nowrap ${todo.completed ? 'line-through text-gray-400' : 'text-gray-900 dark:text-white'}`}>
                   {todo.text}
                 </th>

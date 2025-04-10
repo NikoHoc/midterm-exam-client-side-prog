@@ -1,6 +1,5 @@
 import { useState } from 'react'
 
-
 function AddTodo({ addTodo }) {
     const [newTodo, setNewTodo] = useState("");
   
